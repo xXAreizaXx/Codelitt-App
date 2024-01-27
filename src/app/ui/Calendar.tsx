@@ -8,8 +8,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { TextParagraph, TitleH4, TitleH6 } from '@components/Typography'
 
 // Lib
-import { type AppDispatch, type RootState } from '@lib/redux/store'
 import { selectDate } from '@lib/redux/slices/calendarSlice'
+import { type AppDispatch, type RootState } from '@lib/redux/store'
 
 // Constants
 import { COLORS } from '@constants/colors'
@@ -19,6 +19,7 @@ import { IconChevronLeft, IconChevronRight } from '@tabler/icons-react'
 
 // Styles
 import { CalendarCell, CalendarContainer, CalendarGrid, CalendarHeader, EmptyCell } from '@styles/ui/styled'
+import { formatFilterDate } from '@lib/utils'
 
 export default function Calendar () {
     // Constants
@@ -30,6 +31,8 @@ export default function Calendar () {
 
     // Redux
     const { selectedDate } = useSelector((state: RootState) => state?.calendar)
+
+    const reminders = useSelector((state: RootState) => state?.reminder?.reminders)
 
     const dispatch: AppDispatch = useDispatch()
 
@@ -93,21 +96,28 @@ export default function Calendar () {
                     </TitleH6>
                 ))}
 
-                {getDaysInMonth(year, month).map((date: Date | null, index: number) => (
-                    <Fragment key={index}>
-                        {date !== null
-                            ? <CalendarCell
-                                onClick={() => { handleDateClick(date) }}
-                                selected={date.toDateString() === selectedDate?.toDateString()}
-                            >
-                                <TextParagraph style={{ textAlign: 'center', color: COLORS?.white }}>
-                                    {date.getDate()}
-                                </TextParagraph>
-                                <div className="dot" />
-                            </CalendarCell>
-                            : <EmptyCell />}
-                    </Fragment>
-                ))}
+                {getDaysInMonth(year, month).map((date: Date | null, index: number) => {
+                    const isEmpty = reminders
+                        ?.filter((reminder) => reminder?.date === formatFilterDate(date ?? new Date()))
+                        ?.length === 0
+
+                    return (
+                        <Fragment key={index}>
+                            {date !== null
+                                ? <CalendarCell
+                                    empty={isEmpty}
+                                    onClick={() => { handleDateClick(date) }}
+                                    selected={date.toDateString() === selectedDate?.toDateString()}
+                                >
+                                    <TextParagraph style={{ textAlign: 'center', color: COLORS?.white }}>
+                                        {date.getDate()}
+                                    </TextParagraph>
+                                    <div className="dot" />
+                                </CalendarCell>
+                                : <EmptyCell />}
+                        </Fragment>
+                    )
+                })}
             </CalendarGrid>
         </CalendarContainer>
     )

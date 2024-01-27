@@ -15,7 +15,7 @@ import Empty from '@components/Empty'
 import { COLORS } from '@constants/colors'
 
 // Lib
-import { formatDate } from '@lib/utils'
+import { formatDate, formatFilterDate } from '@lib/utils'
 import { type RootState } from '@lib/redux/store'
 
 // UI
@@ -32,8 +32,6 @@ export default function DetailReminder () {
     const { selectedDate } = useSelector((state: RootState) => state?.calendar)
 
     const reminders = useSelector((state: RootState) => state?.reminder?.reminders)
-
-    console.log('Reminders: ', reminders)
 
     if (reminders?.length === 0) {
         return (
@@ -78,9 +76,11 @@ export default function DetailReminder () {
             </HeaderContainer>
 
             <CardDetailContainer>
-                {reminders?.map((reminder) => (
-                    <CardReminder key={reminder?.id} reminder={reminder} />
-                ))}
+                {reminders
+                    ?.filter((reminder) => reminder?.date === formatFilterDate(selectedDate))
+                    ?.map((reminder) => (
+                        <CardReminder key={reminder?.id} reminder={reminder} />
+                    ))}
             </CardDetailContainer>
         </DetailContainer>
     )

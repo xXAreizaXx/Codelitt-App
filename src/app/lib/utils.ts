@@ -11,6 +11,17 @@ export function formatDate (date: Date) {
     return `${dayOfWeek}, ${month} ${day}, ${year}`
 }
 
+export function formatFilterDate (date: Date) {
+    const inputDate = new Date(date)
+
+    const year = inputDate.getFullYear()
+    const month = (inputDate.getMonth() + 1).toString().padStart(2, '0') // Agregamos 1 porque los meses comienzan desde 0
+    const day = inputDate.getDate().toString().padStart(2, '0')
+    const outputDateString = `${year}-${month}-${day}`
+
+    return outputDateString
+}
+
 // Get size of button
 export function getSize (size: string = 'medium') {
     const SIZES: Record<string, string> = {

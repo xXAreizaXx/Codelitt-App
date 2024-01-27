@@ -62,7 +62,7 @@ export const CalendarGrid = styled.div`
     grid-template-columns: repeat(7, 1fr);
 `
 
-export const CalendarCell = styled.button<{ selected?: boolean }>`
+export const CalendarCell = styled.button<{ selected?: boolean, empty?: boolean }>`
     align-items: center;
     background: ${({ selected = false }) => (selected ? COLORS?.linearGradient?.secondary : 'transparent')};
     border-radius: 50%;
@@ -82,6 +82,7 @@ export const CalendarCell = styled.button<{ selected?: boolean }>`
         background-color: #00ff00;
         border-radius: 50%;
         height: 6px;
+        display: ${({ empty = false }) => (empty ? 'none' : 'block')};
         position: absolute;
         right: 0;
         top: 0;

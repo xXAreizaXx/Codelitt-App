@@ -2,6 +2,7 @@
 import * as yup from 'yup'
 
 export const reminderSchema = yup.object().shape({
+    id: yup.number(),
     color: yup.string().required('Color is required'),
     date: yup.string().required('Date is required'),
     description: yup.string().required('Description is required'),

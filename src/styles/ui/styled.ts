@@ -143,6 +143,7 @@ export const CardDetailContainer = styled.div`
     height: 100%;
     overflow-y: auto;
     padding: 14px;
+    width: 100%;
 `
 
 export const BtnEditReminder = styled.button`

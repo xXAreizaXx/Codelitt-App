@@ -12,7 +12,7 @@ import { formatDate } from '@lib/utils'
 // Styles
 import { DetailContainer, HeaderContainer } from '@styles/ui/edit-reminder'
 
-export default function EditReminderSection () {
+export default function EditReminderSection ({ id }: { id: string }) {
     // Date
     const date = new Date()
 
@@ -24,7 +24,7 @@ export default function EditReminderSection () {
                 </TitleH5>
             </HeaderContainer>
 
-            <EditReminderForm />
+            <EditReminderForm id={id} />
         </DetailContainer>
     )
 }

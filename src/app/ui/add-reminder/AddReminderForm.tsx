@@ -6,11 +6,18 @@ import { useRouter } from 'next/navigation'
 // ReactJS
 import { useForm, type SubmitHandler } from 'react-hook-form'
 
+// Redux
+import { useDispatch } from 'react-redux'
+
 // Components
 import { BtnPrimary } from '@components/Buttons'
 import { InputComponent, TextAreaComponent } from '@components/Inputs'
 import { TextParagraph } from '@components/Typography'
 import Divider from '@components/Divider'
+
+// Lib
+import { addReminder } from '@lib/redux/slices/reminderSlice'
+import { type AppDispatch } from '@lib/redux/store'
 
 // Constants
 import { reminderSchema } from '@constants/schemas'
@@ -27,6 +34,9 @@ export default function AddReminderForm () {
     // Navigation
     const { push } = useRouter()
 
+    // Redux
+    const dispatch: AppDispatch = useDispatch()
+
     // Forms
     const {
         control,
@@ -39,7 +49,12 @@ export default function AddReminderForm () {
 
     // Functions
     const onSubmit: SubmitHandler<AddReminderValues> = (data) => {
-        console.log(data)
+        const newReminder = {
+            ...data,
+            id: Math.floor(Math.random() * 100000)
+        }
+
+        dispatch(addReminder(newReminder))
 
         toast.success('Event has been created')
 

@@ -2,7 +2,8 @@
 import { Open_Sans } from 'next/font/google'
 import type { Metadata } from 'next'
 
-// Libraries
+// Lib
+import ReduxProvider from '@lib/redux/provider'
 import StyledComponentsRegistry from '@lib/registry'
 
 // UI
@@ -38,17 +39,19 @@ export default function RootLayout ({ children }: { children: React.ReactNode })
                 <link rel="icon" href="/favicon.ico" />
             </head>
             <body className={openSans?.className}>
-                <StyledComponentsRegistry>
-                    <AppContainer>
-                        <AppLogo />
+                <ReduxProvider>
+                    <StyledComponentsRegistry>
+                        <AppContainer>
+                            <AppLogo />
 
-                        <DetailCalendarContainer>
-                            {children}
+                            <DetailCalendarContainer>
+                                {children}
 
-                            <DetailCalendar />
-                        </DetailCalendarContainer>
-                    </AppContainer>
-                </StyledComponentsRegistry>
+                                <DetailCalendar />
+                            </DetailCalendarContainer>
+                        </AppContainer>
+                    </StyledComponentsRegistry>
+                </ReduxProvider>
 
                 <Toaster position="top-center" richColors />
             </body>

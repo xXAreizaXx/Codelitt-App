@@ -1,8 +1,15 @@
 // ReactJS
 import { Fragment, useState } from 'react'
 
+// Redux
+import { useDispatch, useSelector } from 'react-redux'
+
 // Components
 import { TextParagraph, TitleH4, TitleH6 } from '@components/Typography'
+
+// Lib
+import { type AppDispatch, type RootState } from '@lib/redux/store'
+import { selectDate } from '@lib/redux/slices/calendarSlice'
 
 // Constants
 import { COLORS } from '@constants/colors'
@@ -21,7 +28,10 @@ export default function Calendar () {
     const [year, setYear] = useState<number>(new Date().getFullYear())
     const [month, setMonth] = useState<number>(new Date().getMonth())
 
-    const [selectedDate, setSelectedDate] = useState<Date>(new Date())
+    // Redux
+    const { selectedDate } = useSelector((state: RootState) => state?.calendar)
+
+    const dispatch: AppDispatch = useDispatch()
 
     // Functions
     const getDaysInMonth = (year: number, month: number) => {
@@ -41,7 +51,7 @@ export default function Calendar () {
     }
 
     const handleDateClick = (date: Date) => {
-        setSelectedDate(date)
+        dispatch(selectDate(date))
     }
 
     const changeDate = (increment: number, type: string) => {
@@ -88,7 +98,7 @@ export default function Calendar () {
                         {date !== null
                             ? <CalendarCell
                                 onClick={() => { handleDateClick(date) }}
-                                selected={date.toDateString() === selectedDate.toDateString()}
+                                selected={date.toDateString() === selectedDate?.toDateString()}
                             >
                                 <TextParagraph style={{ textAlign: 'center', color: COLORS?.white }}>
                                     {date.getDate()}

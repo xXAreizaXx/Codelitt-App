@@ -6,11 +6,18 @@ import { useRouter } from 'next/navigation'
 // ReactJS
 import { useForm, type SubmitHandler } from 'react-hook-form'
 
+// Redux
+import { useDispatch, useSelector } from 'react-redux'
+
 // Components
 import { BtnPrimary } from '@components/Buttons'
 import { InputComponent, TextAreaComponent } from '@components/Inputs'
 import { TextParagraph } from '@components/Typography'
 import Divider from '@components/Divider'
+
+// Lib
+import { type AppDispatch, type RootState } from '@lib/redux/store'
+import { removeReminder, editReminder } from '@lib/redux/slices/reminderSlice'
 
 // Constants
 import { reminderSchema } from '@constants/schemas'
@@ -23,9 +30,17 @@ import { yupResolver } from '@hookform/resolvers/yup'
 // Styles
 import { BtnContainer, Form } from '@styles/ui/edit-reminder'
 
-export default function EditReminderForm () {
+export default function EditReminderForm ({ id }: { id: string }) {
     // Navigation
     const { push } = useRouter()
+
+    // Redux
+    const reminders = useSelector((state: RootState) => state?.reminder?.reminders)
+
+    const dispatch: AppDispatch = useDispatch()
+
+    // Constants
+    const editData = reminders?.find((reminder) => reminder?.id === Number(id))
 
     // Forms
     const {
@@ -33,20 +48,29 @@ export default function EditReminderForm () {
         formState: { errors },
         handleSubmit
     } = useForm<AddReminderValues>({
+        defaultValues: {
+            title: editData?.title,
+            description: editData?.description,
+            date: editData?.date,
+            time: editData?.time,
+            color: editData?.color
+        },
         mode: 'all',
         resolver: yupResolver(reminderSchema)
     })
 
     // Functions
     const onSubmit: SubmitHandler<AddReminderValues> = (data) => {
-        console.log(data)
+        dispatch(editReminder({ id: Number(id), updatedData: data as Reminder }))
 
-        toast.success('Reminder created successfully')
+        toast.info('Reminder edited successfully')
 
         push('/')
     }
 
     const handleRemove = () => {
+        dispatch(removeReminder(Number(id)))
+
         toast.error('Reminder removed successfully')
 
         push('/')
